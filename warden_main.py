@@ -14,6 +14,8 @@ COMMAND_PREFIX = '!'
 #This creates the bot object
 bot = commands.Bot(command_prefix=COMMAND_PREFIX)
 
+#TODO Set permissions for bot to view other users
+
 #on_ready event is called at beginning of runtime
 #can be used like a start or init function
 @bot.event
@@ -28,6 +30,12 @@ async def on_ready():
     if len(bot.guilds) <= 0:
         print('~No connected Guilds~')
     
+#TODO Decide on V1 Commands
+
+#Example !test command :: Will respond to command within the same ctx (context) with a message
+@bot.command()
+async def test(ctx):
+    await ctx.send(f'Thanks {ctx.author} for testing Warden!')
 
 #Attempts to run the bot using the given authentication key
 bot.run(TOKEN)
