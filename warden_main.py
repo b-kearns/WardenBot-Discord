@@ -37,5 +37,17 @@ async def on_ready():
 async def test(ctx):
     await ctx.send(f'Thanks {ctx.author} for testing Warden!')
 
+@bot.command()
+async def roll(ctx, arg1='1d20', mod='0', modall=False):
+    dice_amount = int(arg1.split('d')[0])
+    dice_type = int(arg1.split('d')[1])
+
+    result = 0
+    while dice_amount > 0:
+        result += random.randint(1, dice_type)
+        dice_amount-=1
+
+    await ctx.send(f'Dice Result is: {result}')
+
 #Attempts to run the bot using the given authentication key
 bot.run(TOKEN)
