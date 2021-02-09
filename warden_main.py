@@ -39,15 +39,28 @@ async def test(ctx):
 
 @bot.command()
 async def roll(ctx, arg1='1d20', mod='0', modall=False):
-    dice_amount = int(arg1.split('d')[0])
+    dice_amount_in = int(arg1.split('d')[0])
     dice_type = int(arg1.split('d')[1])
+    dice_amount = dice_amount_in
 
+    roll_history = []
     result = 0
     while dice_amount > 0:
-        result += random.randint(1, dice_type)
+        temp = random.randint(1, dice_type)
+        roll_history.append(temp)
+        result += temp
         dice_amount-=1
+    
+    if modall in ['y', 'Y', 'true', 'True']:
+        modall = True
 
-    await ctx.send(f'Dice Result is: {result}')
+    if modall:
+        mod = int(mod) * dice_amount_in
+        result += mod
+    else:
+        result += int(mod)
+
+    await ctx.send(f'Rolled {dice_amount_in}d{dice_type} \nDice Result is: {roll_history} + {mod} = {result}')
 
 #Attempts to run the bot using the given authentication key
 bot.run(TOKEN)
