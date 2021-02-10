@@ -5,6 +5,7 @@ from discord.ext import commands, tasks
 from dotenv import load_dotenv
 from datetime import datetime
 from tracker import Tracker
+from gif_service import natural_twenty
 
 #Load discord bot authentication key from environment variables
 load_dotenv()
@@ -89,6 +90,10 @@ async def clear(ctx):
 @bot.command()
 async def init(ctx):
     await ctx.send(TRACKER.Print())
+
+@bot.command()
+async def nat(ctx):
+    await ctx.send(natural_twenty())
 
 #Attempts to run the bot using the given authentication key
 bot.run(TOKEN)
