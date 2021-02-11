@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from datetime import datetime
 from tracker import Tracker
 from gif_service import natural_twenty
+from diceroller import roll_dice
 
 #Load discord bot authentication key from environment variables
 load_dotenv()
@@ -45,28 +46,18 @@ async def test(ctx):
 #arg determines if the modifier should be repeated.
 @bot.command()
 async def roll(ctx, arg1='1d20', mod='0', modall=False):
-    dice_amount_in = int(arg1.split('d')[0])
+    dice_amount = int(arg1.split('d')[0])
     dice_type = int(arg1.split('d')[1])
-    dice_amount = dice_amount_in
-
-    roll_history = []
-    result = 0
-    while dice_amount > 0:
-        temp = random.randint(1, dice_type)
-        roll_history.append(temp)
-        result += temp
-        dice_amount-=1
     
-    if modall in ['y', 'Y', 'true', 'True']:
-        modall = True
+    result, roll_history =  roll_dice(dice_amount, dice_type, int(mod))
 
-    if modall:
-        mod = int(mod) * dice_amount_in
-        result += mod
+    if result < 0:
+        await ctx.send(f'Invalid Input: {roll_history[0]}')
     else:
-        result += int(mod)
+        await ctx.send(f'Rolled {dice_amount}d{dice_type} \nDice Result is: {roll_history} + {mod} = {result}')
 
-    await ctx.send(f'Rolled {dice_amount_in}d{dice_type} \nDice Result is: {roll_history} + {mod} = {result}')
+    if result - int(mod) == 20 and dice_type == 20:
+        await ctx.send(natural_twenty())
 
 @bot.command()
 async def track(ctx, name='none',value='none'):
